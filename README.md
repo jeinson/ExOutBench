@@ -6,4 +6,4 @@ To install, do
 ```r
 devtools::install_github("jeinson/ExOutBench")
 ```
-See this link ___ for the package documentation, organized in a pretty website!
+Go here https://jeinson.github.io/ExOutBench/ for the package documentation, organized in a pretty website!
