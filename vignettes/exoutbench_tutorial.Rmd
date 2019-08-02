@@ -1,5 +1,6 @@
 ---
 title: "ExOutBench Demonstration"
+author: "Jonah Einson"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{ExOutBench Demonstration}
@@ -7,7 +8,17 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-`ExOutBench` is a tool used to benchmark different methods for calling expression outliers by testing how enriched rare variants are nearby. As input it takes a reference panel of individuals with all rare variants listed, along with their corresponding annotations. The format of this file is as such:
+```{r, echo = FALSE}
+library(tidyverse)
+library(ExOutBench)
+```
+
+
+`ExOutBench` is a tool used to benchmark the performance expression outlier calling methods in prioritizing genes whose expression is associated with rare genetic variation. For each function in the package the input is:
+
+* A file with rare variant information. Which individual-gene pairs have a rare variant? This is provided, or pre-compiled beforehand. 
+* A file with the expresion outlier status of the same individual-gene pair. This is the thing you're trying to test. 
+The file with variant information (called `outlier.calls`) is formatted like this: 
 
 | SampleName | GeneID          | chr  | start  | end    | consdetail        |
 |------------|-----------------|------|--------|--------|-------------------|
@@ -53,6 +64,7 @@ tiss.outlier.scores <-
 !! The column names in the outlier call file and the rare variant call file must match! The package joins them together then performs enrichment analyses. 
 
 Right now, this package is able to calculate enrichment by 
+
 * __Outlier score threshold:__ This indicates how likely it is to observe a rare variant given outlier status, increasingly stringent outlier score thresholds. 
 * __Variant annotation:__ This shows the relative risk of a certain type of rare variant causing an expression outlier to occur, under a fixed threshold. 
 
@@ -60,13 +72,24 @@ In the future, I will add support for showing enrichment of rare variants based 
 
 By default, each function removes all individual-gene pairs from genes that never occur as outliers. This functionality can be turned off by setting `limit.to.genes.w.outliers` to `FALSE`. The functions produce a data frame, and plots the results automatically by default. See the package documentation for more options and descriptions. 
 
-```{r}
+Run the enrichment by significance pipeline!
+```{r, fig.width=6, fig.height=4}
 enrichment.by.significance.output <- 
   enrichment_by_significance(outlier.calls = tiss.outlier.scores, rare.variants = rare.variants, draw.plot = T)
 ```
 
 ```{r}
+enrichment.by.significance.output
+```
+
+
+Run the enrichment by annotation pipeline!
+```{r, fig.width=6, fig.height=4}
 enrichment.by.annotation.out <- 
   enrichment_by_annotation(outlier.calls = tiss.outlier.scores, rare.variants = rare.variants, draw.plot = T)
+```
+
+```{r}
+enrichment.by.annotation.out
 ```
 
