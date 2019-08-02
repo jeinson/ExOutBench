@@ -1,0 +1,72 @@
+---
+title: "ExOutBench Demonstration"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{ExOutBench Demonstration}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+`ExOutBench` is a tool used to benchmark different methods for calling expression outliers by testing how enriched rare variants are nearby. As input it takes a reference panel of individuals with all rare variants listed, along with their corresponding annotations. The format of this file is as such:
+
+| SampleName | GeneID          | chr  | start  | end    | consdetail        |
+|------------|-----------------|------|--------|--------|-------------------|
+| IndvA      | ENSG00000186092 | chr1 | 64904  | 64905  | upstream          |
+| IndvA      | ENSG00000230021 | chr1 | 631495 | 631496 | upstream          |
+| IndvA      | ENSG00000230021 | chr1 | 666203 | 666204 | intron,non_coding |
+| IndvA      | ENSG00000230021 | chr1 | 666398 | 666399 | intron,non_coding |
+| IndvB      | ENSG00000225972 | chr1 | 631495 | 631496 | downstream        |
+| IndvB      | ENSG00000225630 | chr1 | 631495 | 631496 | downstream        |
+| IndvB      | ENSG00000237973 | chr1 | 631495 | 631496 | non_coding_exon   |
+| IndvB      | ENSG00000229344 | chr1 | 631495 | 631496 | upstream          |
+
+Every line is an individual-gene pair and a rare variant associated with that gene. There can be multiple rare variants associated with one individual-gene pair, but if an individual-gene pair does not carry any rare variants within the specified window, it will be excluded from the table.
+
+I have compiled this file for European individuals in the GTEx v8 cohort. It lists all rare variants (MAF < 1% in GnomAD and in GTEx) within 10 kb upstream of the gene and within the gene body. The file will have to be shared internally, since it contains personal genotype data. 
+
+```{r}
+rare.variants <- read_tsv(
+  "/gpfs/commons/groups/lappalainen_lab/jeinson/data/ExOutBench_data/all_rare_variants_SNPs_10kb_genebody_w_consdetail_no_NA.tsv", 
+  progress = F)
+```
+
+The test also takes in expression outlier calls from any method you might want to benchmark. The formatted is as such, where every row is an individual-gene pair with a corresponding "outlier score":
+
+|GeneID          |SampleName | outlier.score|
+|:---------------|:----------|-------------:|
+|ENSG00000000971 |GTEX-1117F |     0.9098267|
+|ENSG00000001561 |GTEX-1117F |     0.9605523|
+|ENSG00000001617 |GTEX-1117F |     0.9692674|
+|ENSG00000002549 |GTEX-1117F |     0.9269707|
+|ENSG00000002822 |GTEX-1117F |     0.8792655|
+|ENSG00000002834 |GTEX-1117F |     0.9964071|
+
+```{r}
+tiss.outlier.scores <-
+  read_csv("/gpfs/commons/groups/lappalainen_lab/jeinson/projects/aneva-dot/analysis_v8/ANEVA-DOT-pipeline/Filtering/combined.ad.scores.in.MSCLSK.tsv") %>%
+  rename("GeneID" = "X1") %>%
+  gather(SampleName, DOT.score, -GeneID) %>%
+  filter(complete.cases(.)) %>%
+  rename("outlier.score" = "DOT.score")
+```
+
+!! The column names in the outlier call file and the rare variant call file must match! The package joins them together then performs enrichment analyses. 
+
+Right now, this package is able to calculate enrichment by 
+* __Outlier score threshold:__ This indicates how likely it is to observe a rare variant given outlier status, increasingly stringent outlier score thresholds. 
+* __Variant annotation:__ This shows the relative risk of a certain type of rare variant causing an expression outlier to occur, under a fixed threshold. 
+
+In the future, I will add support for showing enrichment of rare variants based on their distance to outlier genes, and enrichment of rare variants given their population frequency. 
+
+By default, each function removes all individual-gene pairs from genes that never occur as outliers. This functionality can be turned off by setting `limit.to.genes.w.outliers` to `FALSE`. The functions produce a data frame, and plots the results automatically by default. See the package documentation for more options and descriptions. 
+
+```{r}
+enrichment.by.significance.output <- 
+  enrichment_by_significance(outlier.calls = tiss.outlier.scores, rare.variants = rare.variants, draw.plot = T)
+```
+
+```{r}
+enrichment.by.annotation.out <- 
+  enrichment_by_annotation(outlier.calls = tiss.outlier.scores, rare.variants = rare.variants, draw.plot = T)
+```
+

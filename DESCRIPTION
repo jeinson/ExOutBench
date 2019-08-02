@@ -1,0 +1,19 @@
+Package: ExOutBench
+Type: Package
+Title: [Ex]pression [Out]lier [Bench]marking tool
+Version: 0.1.0
+Author: Jonah Einson
+Maintainer: <jeinson@nygenome.org>
+Description: This package provides some simple benchmarking tools for checking how well an expression outlier
+  calling method prioritizes genes that have nearby rare variants. To run, you must provide a file with rare
+  variants associated with genes across many individuals from a dataset such as GTEx. 
+License: CC0
+Imports: 
+  tidyverse
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.1.1
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
