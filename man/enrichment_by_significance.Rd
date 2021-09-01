@@ -4,35 +4,48 @@
 \alias{enrichment_by_significance}
 \title{Enrichment of rare variants stratified by outlier significance threshold}
 \usage{
-enrichment_by_significance(outlier.calls, rare.variants,
+enrichment_by_significance(
+  outlier.calls,
+  rare.variants,
   outlier.thresholds = c(0.05, 0.01, 0.001, 1e-04, 1e-05, 1e-07),
-  limit.to.genes.w.outliers = T, base.significance.cutoff = 0.05,
-  draw.plot = T, verbose = T)
+  limit.to.genes.w.outliers = TRUE,
+  base.significance.cutoff = 0.05,
+  draw.plot = TRUE,
+  verbose = TRUE
+)
 }
 \arguments{
-\item{outlier.calls}{A data frame with columns \code{GeneID}, \code{SampleName}, and \code{outlier.score}. The outlier.score is the
-result of any expression based test which designates a gene as an outlier at some threshold.}
+\item{outlier.calls}{A data frame with columns \code{GeneID},
+\code{SampleName}, and \code{outlier.score}. The outlier.score is the
+result of any expression based test which designates a gene as an outlier
+at some threshold.}
 
-\item{rare.variants}{A data frame that lists all rare variants found near individual-gene pairs. Must columsn titled
-\code{SampleName}, \code{GeneID}, \code{chr}, \code{start}, and \code{end}}
+\item{rare.variants}{A data frame that lists all rare variants found near
+individual-gene pairs. Must columns titled \code{SampleName}, \code{GeneID},
+\code{chr}, \code{start}, and \code{end}}
 
-\item{outlier.thresholds}{Defaults to `c(0.05, 1e-2, 1e-3, 1e-4, 1e-5, 1e-7)`.
+\item{outlier.thresholds}{Defaults to \code{c(0.05, 1e-2, 1e-3, 1e-4, 1e-5, 1e-7)}.
 This script will calculate enrichment at every threshold.}
 
-\item{limit.to.genes.w.outliers}{Default to `TRUE`. Should I remove genes that are never outliers in any individual?}
+\item{limit.to.genes.w.outliers}{Default to \code{TRUE}. Should I remove genes
+that are never outliers in any individual?}
 
-\item{base.significance.cutoff}{Default to `0.05`. Only needed if `limit.to.genes.w.outliers` is true. Use this threshold
-for deciding whether to exclude genes that are never outliers.}
+\item{base.significance.cutoff}{Default to \code{0.05} Only needed
+if \code{limit.to.genes.w.outliers} is true. Use this threshold for
+deciding whether to exclude genes that are never outliers.}
 
-\item{verbose}{Defaults to `TRUE` Should I print annoying but helpful messages?}
+\item{verbose}{Defaults to \code{TRUE} Should I print annoying
+but helpful messages?}
 }
 \value{
 A data frame with enrichment scores at each significance level.
-
-This function takes a data frame of outlier calls and a data frame of rare variant genotype data and produces
-a data frame with enrichment values representing the relative risk of having a rare variant given outlier status
-at different significance levels.
 }
 \description{
-Enrichment of rare variants stratified by outlier significance threshold
+This function takes a data frame of outlier calls and a data frame of
+rare variant genotype data and produces a data frame with enrichment
+values representing the relative risk of having a rare variant given
+outlier status at different significance levels.
+}
+\seealso{
+\code{\link{enrichment_by_annotation}}
 }

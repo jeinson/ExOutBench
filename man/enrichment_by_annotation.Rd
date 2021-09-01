@@ -4,36 +4,43 @@
 \alias{enrichment_by_annotation}
 \title{Enrichment of rare variants stratified by their annotation}
 \usage{
-enrichment_by_annotation(outlier.calls, rare.variants,
-  limit.to.genes.w.outliers = T, sig = 0.05, verbose = T,
-  draw.plot = T)
+enrichment_by_annotation(
+  outlier.calls,
+  rare.variants,
+  limit.to.genes.w.outliers = TRUE,
+  sig = 0.05,
+  verbose = TRUE,
+  draw.plot = TRUE
+)
 }
 \arguments{
-\item{outlier.calls}{A data frame with columns \code{GeneID}, \code{SampleName}, and \code{outlier.score}. The outlier.score is the
-result of any expression based test which designates a gene as an outlier at some threshold.}
+\item{outlier.calls}{A data frame with columns \code{GeneID},
+\code{SampleName}, and \code{outlier.score}. The outlier.score is the
+result of any expression based test which designates a gene as an outlier
+at some threshold.}
 
-\item{rare.variants}{A data frame that lists all rare variants found near individual-gene pairs. Must columsn titled
-\code{SampleName}, \code{GeneID}, \code{chr}, \code{start}, and \code{end}}
+\item{rare.variants}{A data frame that lists all rare variants found near
+individual-gene pairs. Must columns titled \code{SampleName}, \code{GeneID},
+\code{chr}, \code{start}, and \code{end}}
 
-\item{limit.to.genes.w.outliers}{Default to `TRUE`. Should I remove genes that are never outliers in any individual?}
+\item{limit.to.genes.w.outliers}{Default to \code{TRUE}. Should I remove genes
+that are never outliers in any individual?}
 
-\item{verbose}{Defaults to `TRUE` Should I print annoying but helpful messages?}
+\item{verbose}{Defaults to \code{TRUE} Should I print annoying
+but helpful messages?}
 
-\item{annotations}{The corresponding annotations for the `rare.variants` table. This will be joined together.}
-
-\item{outlier.thresholds}{Defaults to `c(0.05, 1e-2, 1e-3, 1e-4, 1e-5, 1e-7)`.
-This script will calculate enrichment at every threshold.}
-
-\item{base.significance.cutoff}{Default to `0.05`. Only needed if `limit.to.genes.w.outliers` is true. Use this threshold
-for deciding whether to exclude genes that are never outliers.}
+\item{annotations}{The corresponding annotations for the `rare.variants`
+table. This will be joined together.}
 }
 \value{
 A data frame with enrichment scores at each significance level.
-
-This function takes a data frame of outlier calls and a data frame of rare variant genotype data and produces
-a data frame with enrichment values representing the relative risk of having a rare variant given outlier status
-at different significance levels.
 }
 \description{
-Enrichment of rare variants stratified by their annotation
+This function takes a data frame of outlier calls and a data frame of
+rare variant genotype data and produces a data frame with enrichment
+values representing the relative risk of having a rare variant given
+outlier status at different significance levels.
+}
+\seealso{
+\code{\link{enrichment_by_significance}}
 }
