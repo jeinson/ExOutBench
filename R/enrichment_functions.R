@@ -137,7 +137,7 @@ enrichment_by_significance <- function(
   }
   indvs.w.scores <- unique(outlier.calls$SampleName)
   indvs.w.RV.calls <- unique(rare.variants$SampleName)
-  usable.indvs <- intersect(indvs.w.scores, indvs.w.RV.calls)
+  usable.indvs <- intersect(x = indvs.w.scores, y = indvs.w.RV.calls)
   outlier.calls.w.RVs <-
     outlier.calls %>%
     filter(SampleName %in% usable.indvs) %>%
@@ -196,6 +196,7 @@ enrichment_by_significance <- function(
 #'
 #' @return A data frame with enrichment scores at each significance level.
 #'
+#' @importFrom tidyr unnest
 #' @importFrom stringr str_split
 #' @importFrom ggplot2 scale_y_continuous
 #'
